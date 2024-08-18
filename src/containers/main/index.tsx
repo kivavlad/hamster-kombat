@@ -50,12 +50,14 @@ const Main: React.FC = () => {
   }
 
   return (
-    <LayoutMain>
-      <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
-      <Score points={store.coins}/>
-      <Clicker onClick={handleClick}/>
+    <>
+      <LayoutMain>
+        <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
+        <Score points={store.coins}/>
+        <Clicker onClick={handleClick}/>
+      </LayoutMain>
       <Clicks clicks={clicks} pointsToAdd={pointsToAdd} onAnimationEnd={handleAnimationEnd}/>
-    </LayoutMain>
+    </>
   )
 }
 

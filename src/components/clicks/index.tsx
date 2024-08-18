@@ -14,7 +14,7 @@ const Clicks: React.FC<IProps> = ({clicks, pointsToAdd, onAnimationEnd}) => {
         <div  className="absolute text-5xl font-bold opacity-0 text-white pointer-events-none"
           key={click.id}    
           style={{
-            top: `${click.y - 150}px`,
+            top: `${click.y - 50}px`,
             left: `${click.x - 30}px`,
             animation: `float 1s ease-out`
           }}
