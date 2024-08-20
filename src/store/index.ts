@@ -6,9 +6,8 @@ export const useStore = create<IStore>((set, get) => ({
   profitPerHour: 126420,
   level: 6,
 
-  setCoins(coin) {
-    const {coins} = get();    
-    set({coins: coins + coin})
+  setCoins(newCoins) {
+    set({coins: newCoins});
   },
 
   setLevel(newLevel) {

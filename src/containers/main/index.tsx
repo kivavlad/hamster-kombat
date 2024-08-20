@@ -30,19 +30,29 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    // Определяем, какой тип события произошел
+    const isTouchEvent = 'touches' in e; // Проверяем, является ли событие касанием
+  
+    // Получаем координаты клика или касания
+    const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
+    const clientY = isTouchEvent ? e.touches[0].clientY : e.clientY;
+  
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
-
-    setTimeout(() => {
-      card.style.transform = '';
-    }, 100)
-
-    store.setCoins(pointsToAdd);
-    setClicks([...clicks, { id: Date.now(), x: e.pageX, y: e.pageY }]);
+    const x = clientX - rect.left - rect.width / 2;
+    const y = clientY - rect.top - rect.height / 2;
+    const touchCount = isTouchEvent ? e.touches.length : 1;
+    
+    if (touchCount >= 1 && touchCount <= 5) {
+      card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+  
+      setTimeout(() => (card.style.transform = ''), 100);
+  
+      // Добавляем логику для обработки кликов или касаний
+      store.setCoins(store.coins + pointsToAdd * touchCount);
+      setClicks((prevClicks) => [...prevClicks, { id: Date.now(), x: clientX, y: clientY }]);
+    }
   }
 
   const handleAnimationEnd = (id: number) => {

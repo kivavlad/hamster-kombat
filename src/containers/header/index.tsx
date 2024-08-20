@@ -53,15 +53,6 @@ const Header: React.FC = () => {
     }
   }, [store.coins, store.level])
 
-  useEffect(() => {
-    const pointsPerSecond = Math.floor(store.profitPerHour / 3600);
-    const interval = setInterval(() => {
-      store.setCoins(pointsPerSecond);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [store.profitPerHour])
-
   return (
     <LayoutHeader>
       <Level
