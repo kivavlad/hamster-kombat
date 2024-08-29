@@ -50,18 +50,18 @@ const Main: React.FC = () => {
     setClicks((prevClicks) => [...prevClicks, {id: Date.now(), x: clientX, y: clientY}]);
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((window.innerWidth > 768)) {
-      handleClickPosition(e)
-      store.setCoins(store.coins + pointsToAdd);
-    }
-  }
-
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if ((window.innerWidth < 768)) {
       const touchCount = e.touches.length;
       handleClickPosition(e)
       store.setCoins(store.coins + pointsToAdd * touchCount);
+    }
+  }
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((window.innerWidth > 768)) {
+      handleClickPosition(e)
+      store.setCoins(store.coins + pointsToAdd);
     }
   }
 
