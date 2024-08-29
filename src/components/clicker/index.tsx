@@ -9,19 +9,19 @@ interface IProps {
 }
 
 const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
-  const hamsterRef = useRef<any>();
+  const circleRef = useRef<any>();
   const hidden = {opacity: 0, transform: 'scale(0.7)'};
   const visible = {opacity: 1, transform: 'scale(1)'};
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
-      if (hamsterRef.current && hamsterRef.current.contains(e.target as Node)) {
+      if (circleRef.current && circleRef.current.contains(e.target as Node)) {
         e.preventDefault(); 
         onTouch(e as unknown as React.TouchEvent<HTMLDivElement>);
       }
     }
 
-    const currentRef = hamsterRef.current;
+    const currentRef = circleRef.current;
 
     if (currentRef) {
       currentRef.addEventListener("touchstart", handleTouchStart, {passive: false});
@@ -38,9 +38,9 @@ const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
       animate={visible}
       transition={{delay: 0.2}}
     >
-      <div ref={hamsterRef} className="px-4 mt-4 flex justify-center">
-        <div
-          className="w-80 h-80 p-4 rounded-full circle-outer"
+      <div className="px-4 mt-4 flex justify-center">
+        <div className="w-80 h-80 p-4 rounded-full circle-outer"
+          ref={circleRef}
           onClick={(e) => onClick(e)}
         >
           <div className="w-full h-full rounded-full circle-inner">
