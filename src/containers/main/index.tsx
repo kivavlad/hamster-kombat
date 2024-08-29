@@ -30,7 +30,7 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+  const handleClickPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     // Определяем, какой тип события произошел
     const isTouchEvent = 'touches' in e; // Проверяем, является ли событие касанием
   
@@ -42,16 +42,26 @@ const Main: React.FC = () => {
     const rect = card.getBoundingClientRect();
     const x = clientX - rect.left - rect.width / 2;
     const y = clientY - rect.top - rect.height / 2;
-    const touchCount = isTouchEvent ? e.touches.length : 1;
     
-    if (touchCount >= 1 && touchCount <= 5) {
-      card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+    setTimeout(() => (card.style.transform = ''), 80);
   
-      setTimeout(() => (card.style.transform = ''), 100);
-  
-      // Добавляем логику для обработки кликов или касаний
+    // Добавляем логику для обработки кликов или касаний
+    setClicks((prevClicks) => [...prevClicks, {id: Date.now(), x: clientX, y: clientY}]);
+  }
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((window.innerWidth > 768)) {
+      handleClickPosition(e)
+      store.setCoins(store.coins + pointsToAdd);
+    }
+  }
+
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if ((window.innerWidth < 768)) {
+      const touchCount = e.touches.length;
+      handleClickPosition(e)
       store.setCoins(store.coins + pointsToAdd * touchCount);
-      setClicks((prevClicks) => [...prevClicks, { id: Date.now(), x: clientX, y: clientY }]);
     }
   }
 
@@ -64,7 +74,7 @@ const Main: React.FC = () => {
       <LayoutMain>
         <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
         <Score points={store.coins}/>
-        <Clicker onClick={handleClick}/>
+        <Clicker onClick={handleClick} onTouch={onTouchStart}/>
       </LayoutMain>
       <Clicks clicks={clicks} pointsToAdd={pointsToAdd} onAnimationEnd={handleAnimationEnd}/>
     </>

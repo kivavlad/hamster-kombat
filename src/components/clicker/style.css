@@ -7,6 +7,12 @@
   height: 90vw;
   max-width: 360px;
   max-height: 360px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  touch-action: none !important;
+  -webkit-touch-callout: none;
+
 }
   
 .circle-inner {
@@ -15,4 +21,10 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  touch-action: none !important;
+  -webkit-touch-callout: none;
 }
