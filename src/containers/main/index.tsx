@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {memo, useState, useEffect, useCallback} from "react";
 import {useStore} from "../../store";
 import {calculateTime} from "../../utils/helper";
 import {IClick} from "../../types/i-clicks";
@@ -30,11 +30,9 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClickPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    // Определяем, какой тип события произошел
-    const isTouchEvent = 'touches' in e; // Проверяем, является ли событие касанием
+  const handleClickPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>, touchId?: number) => {
+    const isTouchEvent = 'touches' in e;
   
-    // Получаем координаты клика или касания
     const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
     const clientY = isTouchEvent ? e.touches[0].clientY : e.clientY;
   
@@ -46,15 +44,22 @@ const Main: React.FC = () => {
     card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
     setTimeout(() => (card.style.transform = ''), 80);
   
-    // Добавляем логику для обработки кликов или касаний
-    setClicks((prevClicks) => [...prevClicks, {id: Date.now(), x: clientX, y: clientY}]);
+    if (touchId !== undefined) {
+      setClicks((prevClicks) => [...prevClicks, {id: Date.now(), x: clientX, y: clientY}]);
+    }
+
+    setTimeout(() => {
+      setClicks((prev) => prev.filter((item) => item.id !== touchId))
+    }, 1000);
   }
 
-  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if ((window.innerWidth < 768)) {
-      const touchCount = e.touches.length;
-      handleClickPosition(e)
-      store.setCoins(store.coins + pointsToAdd * touchCount);
+      Array.from(e.touches).forEach((touch) => {
+        const touchId = touch.identifier;
+        handleClickPosition(e, touchId);
+        store.setCoins(store.coins + pointsToAdd);
+      })
     }
   }
 
@@ -65,8 +70,9 @@ const Main: React.FC = () => {
     }
   }
 
-  const handleAnimationEnd = (id: number) => {
-    setClicks((prevClicks) => prevClicks.filter(click => click.id !== id));
+  const callbacks = {
+    onClick: useCallback((e: React.MouseEvent<HTMLDivElement>) => handleClick(e), []),
+    onTouchStart: useCallback((e: React.TouchEvent<HTMLDivElement>) => handleTouchStart(e), []),
   }
 
   return (
@@ -74,11 +80,11 @@ const Main: React.FC = () => {
       <LayoutMain>
         <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
         <Score points={store.coins}/>
-        <Clicker onClick={handleClick} onTouch={onTouchStart}/>
+        <Clicker onClick={callbacks.onClick} onTouchStart={callbacks.onTouchStart}/>
       </LayoutMain>
-      <Clicks clicks={clicks} pointsToAdd={pointsToAdd} onAnimationEnd={handleAnimationEnd}/>
+      <Clicks clicks={clicks} pointsToAdd={pointsToAdd}/>
     </>
   )
 }
 
-export default Main;
+export default memo(Main);

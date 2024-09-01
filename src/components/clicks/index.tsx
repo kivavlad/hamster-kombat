@@ -1,13 +1,13 @@
-import type { IClick } from "../../types/i-clicks";
+import {memo} from "react";
+import type {IClick} from "../../types/i-clicks";
 import "./style.css";
 
 interface IProps {
   clicks: IClick[];
   pointsToAdd: number;
-  onAnimationEnd: (id: number) => void;
 }
 
-const Clicks: React.FC<IProps> = ({clicks, pointsToAdd, onAnimationEnd}) => {
+const Clicks: React.FC<IProps> = ({clicks, pointsToAdd}) => {
   return (
     <>
       {clicks.map((click) => (
@@ -16,9 +16,8 @@ const Clicks: React.FC<IProps> = ({clicks, pointsToAdd, onAnimationEnd}) => {
           style={{
             top: `${click.y - 50}px`,
             left: `${click.x - 30}px`,
-            animation: `float 1s ease-out`
+            animation: `float 0.8s ease-out`
           }}
-          onAnimationEnd={() => onAnimationEnd(click.id)}
         >
           {pointsToAdd}
         </div>
@@ -27,4 +26,4 @@ const Clicks: React.FC<IProps> = ({clicks, pointsToAdd, onAnimationEnd}) => {
   )
 }
 
-export default Clicks;
+export default memo(Clicks);

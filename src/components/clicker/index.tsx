@@ -1,14 +1,14 @@
-import {useRef, useEffect} from "react";
+import {memo, useRef, useEffect} from "react";
 import {motion} from "framer-motion";
 import { mainCharacter } from "../../assets/images";
 import "./style.css";
 
 interface IProps {
   onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onTouch: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void;
 }
 
-const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
+const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
   const circleRef = useRef<any>();
   const hidden = {opacity: 0, transform: 'scale(0.7)'};
   const visible = {opacity: 1, transform: 'scale(1)'};
@@ -17,7 +17,7 @@ const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
     const handleTouchStart = (e: TouchEvent) => {
       if (circleRef.current && circleRef.current.contains(e.target as Node)) {
         e.preventDefault(); 
-        onTouch(e as unknown as React.TouchEvent<HTMLDivElement>);
+        onTouchStart(e as unknown as React.TouchEvent<HTMLDivElement>);
       }
     }
 
@@ -30,7 +30,7 @@ const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
     return () => {
       if (currentRef) currentRef.removeEventListener("touchstart", handleTouchStart);
     }
-  }, [onTouch])
+  }, [onTouchStart])
 
   return (
     <motion.div
@@ -52,4 +52,4 @@ const Clicker: React.FC<IProps> = ({onClick, onTouch}) => {
   )
 }
 
-export default Clicker;
+export default memo(Clicker);
