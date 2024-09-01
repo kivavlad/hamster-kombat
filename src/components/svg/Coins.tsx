@@ -1,4 +1,5 @@
-import { IconProps } from "../../types/i-icon";
+import {memo} from "react";
+import {IconProps} from "../../types/i-icon";
 
 const Coins: React.FC<IconProps> = ({ size = 24, className = "" }) => {
   const svgSize = `${size}px`;
@@ -8,4 +9,4 @@ const Coins: React.FC<IconProps> = ({ size = 24, className = "" }) => {
   )
 }
 
-export default Coins;
+export default memo(Coins);

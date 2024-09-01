@@ -1,4 +1,5 @@
-import { IconProps } from "../../types/i-icon";
+import {memo} from "react";
+import {IconProps} from "../../types/i-icon";
 
 const Info: React.FC<IconProps> = ({ size = 24, className = "" }) => {
 
@@ -9,4 +10,4 @@ const Info: React.FC<IconProps> = ({ size = 24, className = "" }) => {
   )
 }
 
-export default Info;
+export default memo(Info);

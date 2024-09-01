@@ -1,3 +1,4 @@
+import {memo} from "react";
 import {motion} from "framer-motion";
 import { dailyReward, dailyCipher, dailyCombo } from "../../assets/images";
 import "./style.css";
@@ -41,4 +42,4 @@ const Daily: React.FC<IProps> = ({reward, cipher, combo}) => {
   )
 }
 
-export default Daily;
+export default memo(Daily);

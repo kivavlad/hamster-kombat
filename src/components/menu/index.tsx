@@ -1,3 +1,4 @@
+import {memo} from "react";
 import Mine from "../svg/Mine";
 import Friends from "../svg/Friends";
 import Coins from "../svg/Coins";
@@ -31,4 +32,4 @@ const Menu: React.FC = () => {
   )
 }
 
-export default Menu;
+export default memo(Menu);

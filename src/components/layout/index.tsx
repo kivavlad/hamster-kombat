@@ -1,3 +1,4 @@
+import {memo} from "react";
 import "./style.css";
 
 interface IProps {
@@ -14,4 +15,4 @@ const Layout: React.FC<IProps> = ({children}) => {
   )
 }
 
-export default Layout;
+export default memo(Layout);

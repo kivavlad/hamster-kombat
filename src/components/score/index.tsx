@@ -1,3 +1,4 @@
+import {memo} from "react";
 import {motion} from "framer-motion";
 import { dollarCoin } from "../../assets/images";
 import "./style.css";
@@ -25,4 +26,4 @@ const Score: React.FC<IProps> = ({points}) => {
   )
 }
 
-export default Score;
+export default memo(Score);

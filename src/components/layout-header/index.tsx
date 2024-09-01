@@ -1,3 +1,4 @@
+import {memo} from "react";
 import {motion} from "framer-motion";
 import Hamster from "../svg/Hamster";
 
@@ -29,4 +30,4 @@ const LayoutHeader: React.FC<IProps> = ({children}) => {
   )
 }
 
-export default LayoutHeader;
+export default memo(LayoutHeader);

@@ -1,3 +1,4 @@
+import {memo} from "react";
 import "./style.css";
 
 interface IProps {
@@ -25,4 +26,4 @@ const Level: React.FC<IProps> = ({levelName, currentLevel, maxLevel, progress}) 
   )
 }
 
-export default Level;
+export default memo(Level);

@@ -1,3 +1,4 @@
+import {memo} from "react";
 import Info from "../svg/Info";
 import Settings from "../svg/Settings";
 import { formatProfitPerHour } from "../../utils/helper";
@@ -27,4 +28,4 @@ const Profit: React.FC<IProps> = ({profitPerHour}) => {
   )
 }
 
-export default Profit;
+export default memo(Profit);

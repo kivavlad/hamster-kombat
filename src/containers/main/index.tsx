@@ -30,7 +30,7 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClickPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>, touchId?: number) => {
+  const handleClickPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>, touchId: number) => {
     const isTouchEvent = 'touches' in e;
   
     const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
@@ -43,10 +43,7 @@ const Main: React.FC = () => {
     
     card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
     setTimeout(() => (card.style.transform = ''), 80);
-  
-    if (touchId !== undefined) {
-      setClicks((prevClicks) => [...prevClicks, {id: Date.now(), x: clientX, y: clientY}]);
-    }
+    setClicks((prev) => [...prev, {id: touchId, x: clientX, y: clientY}]);
 
     setTimeout(() => {
       setClicks((prev) => prev.filter((item) => item.id !== touchId))
@@ -56,7 +53,7 @@ const Main: React.FC = () => {
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if ((window.innerWidth < 768)) {
       Array.from(e.touches).forEach((touch) => {
-        const touchId = touch.identifier;
+        const touchId = Date.now() - touch.identifier;
         handleClickPosition(e, touchId);
         store.setCoins(store.coins + pointsToAdd);
       })
@@ -65,7 +62,8 @@ const Main: React.FC = () => {
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((window.innerWidth > 768)) {
-      handleClickPosition(e)
+      const clickId = Date.now();
+      handleClickPosition(e, clickId);
       store.setCoins(store.coins + pointsToAdd);
     }
   }
