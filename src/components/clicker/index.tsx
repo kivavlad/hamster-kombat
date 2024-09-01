@@ -4,8 +4,8 @@ import {mainCharacter} from "../../assets/images";
 import "./style.css";
 
 interface IProps {
-  onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onTouchStart: (e: React.TouchEvent<HTMLButtonElement>) => void;
 }
 
 const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
@@ -15,9 +15,9 @@ const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
-      if (circleRef.current && circleRef.current.contains(e.target as Node)) {
+      if (circleRef.current && circleRef.current.contains(e.target as Node) && e.cancelable) {
         e.preventDefault(); 
-        onTouchStart(e as unknown as React.TouchEvent<HTMLDivElement>);
+        onTouchStart(e as unknown as React.TouchEvent<HTMLButtonElement>);
       }
     }
 
@@ -39,14 +39,14 @@ const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
       transition={{delay: 0.2}}
     >
       <div className="px-4 mt-4 flex justify-center">
-        <div className="w-80 h-80 p-4 rounded-full circle-outer"
+        <button className="w-80 h-80 p-4 rounded-full circle-outer"
           ref={circleRef}
           onClick={(e) => onClick(e)}
         >
           <div className="w-full h-full rounded-full circle-inner">
             <img src={mainCharacter} alt="Main Character" className="w-full h-full"/>
           </div>
-        </div>
+        </button>
       </div>
     </motion.div>
   )

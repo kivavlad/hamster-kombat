@@ -1,5 +1,4 @@
 .circle-outer {
-  background: linear-gradient(to bottom, #575def, #202731);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7,23 +6,16 @@
   height: 90vw;
   max-width: 360px;
   max-height: 360px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
   touch-action: none !important;
-  -webkit-touch-callout: none;
+  background: linear-gradient(to bottom, #575def, #202731);
 }
   
 .circle-inner {
-  background: radial-gradient(circle, #4960b2, #282e3e);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
   touch-action: none !important;
-  -webkit-touch-callout: none;
+  background: radial-gradient(circle, #4960b2, #282e3e);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }

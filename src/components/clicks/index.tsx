@@ -11,15 +11,15 @@ const Clicks: React.FC<IProps> = ({clicks, pointsToAdd}) => {
   return (
     <>
       {clicks.map((click) => (
-        <div  className="absolute text-5xl font-bold opacity-0 text-white pointer-events-none"
+        <div className="absolute text-5xl font-bold opacity-0 text-white pointer-events-none"
           key={click.id}    
           style={{
-            top: `${click.y - 50}px`,
+            top: `${click.y - 30}px`,
             left: `${click.x - 30}px`,
             animation: `float 0.8s ease-out`
           }}
         >
-          {pointsToAdd}
+          +{pointsToAdd}
         </div>
       ))}
     </>
