@@ -1,4 +1,4 @@
-import {memo, useState, useEffect, useCallback, useRef} from "react";
+import {memo, useState, useEffect, useCallback} from "react";
 import {useStore} from "../../store";
 import {calculateTime, genUUID} from "../../utils/helper";
 import {IClick} from "../../types/i-clicks";
@@ -10,7 +10,6 @@ import Clicks from "../../components/clicks";
 
 const Main: React.FC = () => {
   const store = useStore(state => state);
-  const tapIdsRef = useRef<Set<string>>(new Set());
 
   const [rewardTime, setRewardTime] = useState<string>('');
   const [cipherTime, setCipherTime] = useState<string>('');
@@ -39,16 +38,10 @@ const Main: React.FC = () => {
     const x = clientX - rect.left - rect.width / 2;
     const y = clientY - rect.top - rect.height / 2;
 
-    if (!tapIdsRef.current.has(touchId)) {
-      tapIdsRef.current.add(touchId);
-      card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
-      setClicks((prev) => [...prev, {id: touchId, x: clientX, y: clientY}]);
-      setTimeout(() => (card.style.transform = ''), 80);
-      setTimeout(() => {
-        setClicks((prev) => prev.filter((item) => item.id !== touchId));
-        tapIdsRef.current.delete(touchId);
-      }, 1000);
-    }
+    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+    setClicks((prev) => [...prev, {id: touchId, x: clientX, y: clientY}]);
+    setTimeout(() => (card.style.transform = ''), 80);
+    setTimeout(() => setClicks((prev) => prev.filter((item) => item.id !== touchId)), 1000);
   }
 
   const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
