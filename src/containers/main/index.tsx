@@ -1,6 +1,6 @@
-import {memo, useState, useEffect, useCallback} from "react";
+import {memo, useState, useEffect, useCallback, useRef} from "react";
 import {useStore} from "../../store";
-import {calculateTime} from "../../utils/helper";
+import {calculateTime, genUUID} from "../../utils/helper";
 import {IClick} from "../../types/i-clicks";
 import LayoutMain from "../../components/layout-main";
 import Daily from "../../components/daily";
@@ -10,7 +10,7 @@ import Clicks from "../../components/clicks";
 
 const Main: React.FC = () => {
   const store = useStore(state => state);
-  const pointsToAdd = 5;
+  const tapIdsRef = useRef<Set<string>>(new Set());
 
   const [rewardTime, setRewardTime] = useState<string>('');
   const [cipherTime, setCipherTime] = useState<string>('');
@@ -30,7 +30,7 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClickPosition = (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>, touchId: number) => {
+  const handleClickPosition = (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>, touchId: string) => {
     const isTouchEvent = 'touches' in e;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -38,29 +38,34 @@ const Main: React.FC = () => {
     const clientY = isTouchEvent ? e.touches[0].clientY : e.clientY;
     const x = clientX - rect.left - rect.width / 2;
     const y = clientY - rect.top - rect.height / 2;
-    
-    card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
-    setClicks((prev) => [...prev, {id: touchId, x: clientX, y: clientY}]);
 
-    setTimeout(() => (card.style.transform = ''), 80);
-    setTimeout(() => setClicks((prev) => prev.filter((item) => item.id !== touchId)), 1000);
+    if (!tapIdsRef.current.has(touchId)) {
+      tapIdsRef.current.add(touchId);
+      card.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+      setClicks((prev) => [...prev, {id: touchId, x: clientX, y: clientY}]);
+      setTimeout(() => (card.style.transform = ''), 80);
+      setTimeout(() => {
+        setClicks((prev) => prev.filter((item) => item.id !== touchId));
+        tapIdsRef.current.delete(touchId);
+      }, 1000);
+    }
   }
 
   const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
     if ((window.innerWidth < 768)) {
       Array.from(e.touches).forEach(() => {
-        const touchId = Date.now();
+        const touchId = genUUID();
         handleClickPosition(e, touchId);
-        store.setCoins(store.coins + pointsToAdd);
+        store.setCoins(store.coins + store.pointsToAdd);
       })
     }
   }
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if ((window.innerWidth > 768)) {
-      const clickId = Date.now();
+      const clickId = genUUID();
       handleClickPosition(e, clickId);
-      store.setCoins(store.coins + pointsToAdd);
+      store.setCoins(store.coins + store.pointsToAdd);
     }
   }
 
@@ -76,7 +81,7 @@ const Main: React.FC = () => {
         <Score points={store.coins}/>
         <Clicker onClick={callbacks.onClick} onTouchStart={callbacks.onTouchStart}/>
       </LayoutMain>
-      <Clicks clicks={clicks} pointsToAdd={pointsToAdd}/>
+      <Clicks clicks={clicks} pointsToAdd={store.pointsToAdd}/>
     </>
   )
 }

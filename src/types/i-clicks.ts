@@ -1,5 +1,5 @@
 export interface IClick {
-  id: number;
+  id: string;
   x: number;
   y: number;
 }

@@ -4,6 +4,7 @@ import type {IStore} from "../types/i-store";
 export const useStore = create<IStore>((set) => ({
   coins: 22749365,
   profitPerHour: 126420,
+  pointsToAdd: 5,
   level: 6,
 
   setCoins(newCoins) {
