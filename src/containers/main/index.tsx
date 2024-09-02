@@ -29,12 +29,12 @@ const Main: React.FC = () => {
     return () => clearInterval(interval);
   }, [])
 
-  const handleClickPosition = (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>, touchId: string) => {
+  const handleClickPosition = (e: React.MouseEvent<HTMLButtonElement> | React.TouchEvent<HTMLButtonElement>, touchId: string, touchIndex: number) => {
     const isTouchEvent = 'touches' in e;
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
-    const clientX = isTouchEvent ? e.touches[0].clientX : e.clientX;
-    const clientY = isTouchEvent ? e.touches[0].clientY : e.clientY;
+    const clientX = isTouchEvent ? e.touches[touchIndex].clientX : e.clientX;
+    const clientY = isTouchEvent ? e.touches[touchIndex].clientY : e.clientY;
     const x = clientX - rect.left - rect.width / 2;
     const y = clientY - rect.top - rect.height / 2;
 
@@ -45,11 +45,11 @@ const Main: React.FC = () => {
   }
 
   const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
-    if ((window.innerWidth < 768)) {
+    if ((window.innerWidth <= 768)) {
       const touches = e.touches.length;
-      Array.from({length: touches}).forEach(() => {
+      Array.from({length: touches}).forEach((_, index) => {
         const touchId = genUUID();
-        handleClickPosition(e, touchId);
+        handleClickPosition(e, touchId, index);
         store.setCoins(store.coins + store.pointsToAdd);
       })
     }
@@ -58,7 +58,8 @@ const Main: React.FC = () => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if ((window.innerWidth > 768)) {
       const clickId = genUUID();
-      handleClickPosition(e, clickId);
+      const touchIndex = 0;
+      handleClickPosition(e, clickId, touchIndex);
       store.setCoins(store.coins + store.pointsToAdd);
     }
   }
