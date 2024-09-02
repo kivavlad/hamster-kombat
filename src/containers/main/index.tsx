@@ -15,6 +15,7 @@ const Main: React.FC = () => {
   const [cipherTime, setCipherTime] = useState<string>('');
   const [comboTime, setComboTime] = useState<string>('');
   const [clicks, setClicks] = useState<IClick[]>([]);
+  const [touches, setTouches] = useState<number>(0);
 
   useEffect(() => {
     const updateCountdowns = () => {
@@ -46,6 +47,7 @@ const Main: React.FC = () => {
 
   const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
     if ((window.innerWidth < 768)) {
+      setTouches(e.touches.length);
       Array.from(e.touches).forEach(() => {
         const touchId = genUUID();
         handleClickPosition(e, touchId);
@@ -73,6 +75,19 @@ const Main: React.FC = () => {
         <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
         <Score points={store.coins}/>
         <Clicker onClick={callbacks.onClick} onTouchStart={callbacks.onTouchStart}/>
+        <div 
+          style={{
+            width: '100%',
+            height: '100px',
+            border: '1px solid white',
+            textAlign: 'center',
+            padding: '20px',
+            fontSize: '1rem',
+            fontWeight: 'bold'
+          }}
+        >
+          {touches}
+        </div>
       </LayoutMain>
       <Clicks clicks={clicks} pointsToAdd={store.pointsToAdd}/>
     </>
