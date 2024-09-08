@@ -1,42 +1,42 @@
 import {memo, useEffect} from "react";
-import {useStore} from "../../store";
+import {useStoreProfile} from "../../store/profile";
 import {levelNames, levelMinPoints} from "../../utils/level";
 import LayoutHeader from "../../components/layout-header";
 import Level from "../../components/level";
 import Profit from "../../components/profit";
 
 const Header: React.FC = () => {
-  const store = useStore(state => state);
+  const {level, coins, profitPerHour, setLevel} = useStoreProfile(state => state);
 
   const calculateProgress = () => {
-    if (store.level >= levelNames.length - 1) {
+    if (level >= levelNames.length - 1) {
       return 100;
     }
-    const currentLevelMin = levelMinPoints[store.level];
-    const nextLevelMin = levelMinPoints[store.level + 1];
-    const progress = ((store.coins - currentLevelMin) / (nextLevelMin - currentLevelMin)) * 100;
+    const currentLevelMin = levelMinPoints[level];
+    const nextLevelMin = levelMinPoints[level + 1];
+    const progress = ((coins - currentLevelMin) / (nextLevelMin - currentLevelMin)) * 100;
     return Math.min(progress, 100);
   }
 
   useEffect(() => {
-    const currentLevelMin = levelMinPoints[store.level];
-    const nextLevelMin = levelMinPoints[store.level + 1];
-    if (store.coins >= nextLevelMin && store.level < levelNames.length - 1) {
-      store.setLevel(store.level + 1);
-    } else if (store.coins < currentLevelMin && store.level > 0) {
-      store.setLevel(store.level - 1);
+    const currentLevelMin = levelMinPoints[level];
+    const nextLevelMin = levelMinPoints[level + 1];
+    if (coins >= nextLevelMin && level < levelNames.length - 1) {
+      setLevel(level + 1);
+    } else if (coins < currentLevelMin && level > 0) {
+      setLevel(level - 1);
     }
-  }, [store.coins, store.level])
+  }, [coins, level])
 
   return (
     <LayoutHeader>
       <Level
-        levelName={levelNames[store.level]}
-        currentLevel={store.level + 1}
+        levelName={levelNames[level]}
+        currentLevel={level + 1}
         maxLevel={levelNames.length}
         progress={calculateProgress()}
       />
-      <Profit profitPerHour={store.profitPerHour}/>
+      <Profit profitPerHour={profitPerHour}/>
     </LayoutHeader>
   )
 }

@@ -1,21 +1,21 @@
 import {useEffect} from 'react';
-import {useStore} from '../store';
+import {useStoreProfile} from '../store/profile';
 import Header from '../containers/header';
 import Main from '../containers/main';
 import Menu from '../components/menu';
 import Layout from '../components/layout';
 
 const App: React.FC = () => {
-  const store = useStore(state => state);
+  const {coins, profitPerHour, setCoins} = useStoreProfile(state => state);
 
   useEffect(() => {
-    const pointsPerSecond = Math.floor(store.profitPerHour / 3600);
+    const pointsPerSecond = Math.floor(profitPerHour / 3600);
     const interval = setInterval(() => {
-      store.setCoins(store.coins + pointsPerSecond);
+      setCoins(coins + pointsPerSecond);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [store.profitPerHour, store.coins])
+  }, [profitPerHour, coins])
 
   return (
     <Layout>

@@ -1,5 +1,6 @@
 import {memo, useState, useEffect, useCallback} from "react";
-import {useStore} from "../../store";
+import {useStoreProfile} from "../../store/profile";
+import {useStoreDaily} from "../../store/daily";
 import {calculateTime, genUUID} from "../../utils/helper";
 import {IClick} from "../../types/i-clicks";
 import LayoutMain from "../../components/layout-main";
@@ -9,11 +10,8 @@ import Clicker from "../../components/clicker";
 import Clicks from "../../components/clicks";
 
 const Main: React.FC = () => {
-  const store = useStore(state => state);
-
-  const [rewardTime, setRewardTime] = useState<string>('');
-  const [cipherTime, setCipherTime] = useState<string>('');
-  const [comboTime, setComboTime] = useState<string>('');
+  const {coins, pointsToAdd, setCoins} = useStoreProfile(state => state);
+  const {rewardTime, cipherTime, comboTime, setCipherTime, setComboTime, setRewardTime} = useStoreDaily(state => state);
   const [clicks, setClicks] = useState<IClick[]>([]);
 
   useEffect(() => {
@@ -44,39 +42,34 @@ const Main: React.FC = () => {
     setTimeout(() => setClicks((prev) => prev.filter((item) => item.id !== touchId)), 1000);
   }
 
-  const handleTouchStart = (e: React.TouchEvent<HTMLButtonElement>) => {
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
     if ((window.innerWidth <= 768)) {
       const touches = e.touches.length;
       Array.from({length: touches}).forEach((_, index) => {
         const touchId = genUUID();
         handleClickPosition(e, touchId, index);
-        store.setCoins(store.coins + store.pointsToAdd);
+        setCoins(coins + pointsToAdd);
       })
     }
-  }
+  }, [coins, pointsToAdd])
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     if ((window.innerWidth > 768)) {
       const clickId = genUUID();
       const touchIndex = 0;
       handleClickPosition(e, clickId, touchIndex);
-      store.setCoins(store.coins + store.pointsToAdd);
+      setCoins(coins + pointsToAdd);
     }
-  }
-
-  const callbacks = {
-    onClick: useCallback((e: React.MouseEvent<HTMLButtonElement>) => handleClick(e), [store]),
-    onTouchStart: useCallback((e: React.TouchEvent<HTMLButtonElement>) => handleTouchStart(e), [store]),
-  }
+  }, [coins, pointsToAdd])
 
   return (
     <>
       <LayoutMain>
         <Daily cipher={cipherTime} combo={comboTime} reward={rewardTime}/>
-        <Score points={store.coins}/>
-        <Clicker onClick={callbacks.onClick} onTouchStart={callbacks.onTouchStart}/>
+        <Score points={coins}/>
+        <Clicker onClick={handleClick} onTouchStart={handleTouchStart}/>
       </LayoutMain>
-      <Clicks clicks={clicks} pointsToAdd={store.pointsToAdd}/>
+      <Clicks clicks={clicks} pointsToAdd={pointsToAdd}/>
     </>
   )
 }

@@ -1,4 +1,4 @@
-export interface IStore {
+export interface IStoreProfile {
   coins: number;
   profitPerHour: number;
   pointsToAdd: number;

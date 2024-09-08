@@ -22,10 +22,7 @@ const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
     }
 
     const currentRef = circleRef.current;
-
-    if (currentRef) {
-      currentRef.addEventListener("touchstart", handleTouchStart, {passive: false});
-    }
+    if (currentRef) currentRef.addEventListener("touchstart", handleTouchStart, {passive: false});
 
     return () => {
       if (currentRef) currentRef.removeEventListener("touchstart", handleTouchStart);
@@ -44,7 +41,7 @@ const Clicker: React.FC<IProps> = ({onClick, onTouchStart}) => {
           onClick={(e) => onClick(e)}
         >
           <div className="w-full h-full rounded-full circle-inner">
-            <img src={mainCharacter} alt="Main Character" className="w-full h-full"/>
+            <img src={mainCharacter} alt="" className="w-full h-full"/>
           </div>
         </button>
       </div>
